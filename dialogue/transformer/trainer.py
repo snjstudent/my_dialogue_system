@@ -3,40 +3,39 @@ import torch.nn as nn
 import torch.optim
 import deepspeed
 import argparse
+import dataloader
+import pdb
+
 
 class Trainer:
-    def __init__(self, model: object, dataloader: torch.utils.data.DataLoader, loss: object, optimizer_name: str,lr:float) -> None:
+    def __init__(self, model: object, dataloader: torch.utils.data.DataLoader, loss: object, optimizer_name: str, lr: float) -> None:
         self.dataloader = dataloader
         self.loss = loss
-        self.lr=lr
-        #self.optimizer = self._select_optimizer(optimizer_name,lr,model)
-        import pdb
+        self.lr = lr
+        self.device = "cuda:0"
+        model = model.to(self.device)
         parser = argparse.ArgumentParser(description='My training script.')
         parser.add_argument('--local_rank', type=int, default=-1)
         parser = deepspeed.add_config_arguments(parser)
         cmd_args = parser.parse_args()
-        cmd_args.deepspeed_config='../../../deepspeed_config.json'
-        self.model,self.optimizer,_ = deepspeed.initialize(args=cmd_args, model=model, model_parameters=model.parameters())
-
-    @classmethod
-    def _select_optimizer(self, optimizer_name: str,lr:float,model:object) -> None:
-        if optimizer_name == "Adam":
-            return torch.optim.Adam(model.parameters(),lr=lr)
-        else:
-            return
+        cmd_args.deepspeed_config = '../../../deepspeed_config.json'
+        self.model_engine, self.optimizer, _, _ = deepspeed.initialize(
+            args=cmd_args, model=model, model_parameters=model.parameters())
+        deepspeed.init_distributed()
 
     def train(self, epoch: int) -> None:
-        assert self.optimizer, print("You have to set Optimizer")
-        # 訓練ループ
-        self.model.train()
         for epoch_num in range(epoch):
             for speak, responce in self.dataloader:
-                data, target = Variable(speak), Variable(responce)  # 微分可能に変換
-                self.optimizer.zero_grad()  # 一度計算された勾配結果を0にリセット
+                speak, responce = speak.to(
+                    self.device), responce.to(self.device)
+                # self.optimizer.zero_grad()
+                output = self.model_engine(speak)
+                loss_output = 0
+                for i in range(responce.shape[1]):
+                    loss_output += self.loss(output[:, i, :], responce[:, i])
+                loss_output /= responce.shape[1]
+                # pdb.set_trace()
+                self.model_engine.backward(loss_output)
+                self.model_engine.step()
 
-                output = self.model(speak)  # 入力dataをinputし、出力を求める
-                loss = loss(output, responce)  # 出力と訓練データの正解との誤差を求める
-                model.backward(loss)  # 誤差のバックプロパゲーションを求める
-                model.step()  # バックプロパゲーションの値で重みを更新する
-
-                print("epoch{}：終了\n".format(epoch+1))
+        print("epoch{}：終了\n".format(epoch_num+1))

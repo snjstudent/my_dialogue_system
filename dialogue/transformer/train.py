@@ -12,7 +12,7 @@ def main(config) -> None:
         config.data.data_category, config.train_conf.batch_size)
     loss = nn.CrossEntropyLoss()
     talk_trainer = trainer.Trainer(talk_model, talk_dataloader, loss,
-                              config.train_conf.optimizer,config.train_conf.optimizer_lr)
+                                   config.train_conf.optimizer, config.train_conf.optimizer_lr)
     talk_trainer.train(epoch=config.train_conf.epoch)
 
 
