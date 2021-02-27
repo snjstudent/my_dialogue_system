@@ -10,16 +10,19 @@ import neologdn
 class TweetReplyDataSet(torch.utils.data.Dataset):
     def __init__(self, do_preprocess: bool = True) -> None:
         super().__init__()
-        reply_txtfiles = glob.glob('tweet/*')
+        reply_txtfiles = glob.glob('../../../tweet/*')
+        # import pdb
+        # pdb.set_trace()
         reply_txtfiles = sorted(reply_txtfiles)
         self.dialog = self._sep_req_res(reply_txtfiles)
+        print(len(self.dialog['REQ']))
         self.do_preprocess = do_preprocess
 
     @classmethod
     def _sep_req_res(self, reply_txtfiles: list) -> dict:
         dialog_dict = {'REQ': [], 'RES': []}
         for txt_file in reply_txtfiles:
-            with open(txt_file) as f:
+            with open(txt_file,"r",errors='ignore') as f:
                 l = f.readlines()
                 for line in l:
                     speaker, speak = line.split(":", 1)
@@ -33,7 +36,7 @@ class TweetReplyDataSet(torch.utils.data.Dataset):
         return neologdn.normalize(re.sub(r'\d+', '0', sentence))
 
     def __len__(self):
-        return len(self.dialog[self.dialog.keys[0]])
+        return len(self.dialog['REQ'])
 
     def __getitem__(self, idx):
         speak, responce = self.dialog['REQ'][idx], self.dialog['RES'][idx]

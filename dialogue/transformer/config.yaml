@@ -4,6 +4,7 @@ data:
 train_conf:
   epoch: 5
   optimizer: "Adam"
+  optimizer_lr: 0.001
   batch_size: 32
 model:
   vocab_size: 50000

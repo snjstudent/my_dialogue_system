@@ -2,19 +2,26 @@ import torch
 import torch.nn as nn
 import torch.optim
 import deepspeed
-
+import argparse
 
 class Trainer:
-    def __init__(self, model: object, dataloader: torch.utils.data.DataLoader, loss: object, optimizer_name: str) -> None:
+    def __init__(self, model: object, dataloader: torch.utils.data.DataLoader, loss: object, optimizer_name: str,lr:float) -> None:
         self.dataloader = dataloader
         self.loss = loss
-        self.optimizer = self._select_optimizer(optimizer_name)
-        self.model = deepspeed.initialize(model, self.optimizer)
+        self.lr=lr
+        #self.optimizer = self._select_optimizer(optimizer_name,lr,model)
+        import pdb
+        parser = argparse.ArgumentParser(description='My training script.')
+        parser.add_argument('--local_rank', type=int, default=-1)
+        parser = deepspeed.add_config_arguments(parser)
+        cmd_args = parser.parse_args()
+        cmd_args.deepspeed_config='../../../deepspeed_config.json'
+        self.model,self.optimizer,_ = deepspeed.initialize(args=cmd_args, model=model, model_parameters=model.parameters())
 
     @classmethod
-    def _select_optimizer(self, optimizer_name: str) -> None:
+    def _select_optimizer(self, optimizer_name: str,lr:float,model:object) -> None:
         if optimizer_name == "Adam":
-            return torch.optim.Adam()
+            return torch.optim.Adam(model.parameters(),lr=lr)
         else:
             return
 
