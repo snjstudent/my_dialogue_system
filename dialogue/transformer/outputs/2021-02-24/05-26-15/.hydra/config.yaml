@@ -1,9 +1,0 @@
-mode: train
-data:
-  data_category: tweet_reply
-train_conf:
-  epoch: 5
-  optimizer: Adam
-  batch_size: 32
-model:
-  vocab_size: 50000
