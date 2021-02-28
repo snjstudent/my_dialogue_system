@@ -10,7 +10,7 @@ import MeCab
 import textspan
 from typing import List, Optional
 import pathlib
-
+import numpy as np
 # トークナイザの定義
 # 引用元 https://tech.mntsq.co.jp/entry/2021/02/26/120013
 
@@ -104,10 +104,9 @@ class TweetReplyDataSet(torch.utils.data.Dataset):
         reply_txtfiles = sorted(reply_txtfiles)
         train_custom_tokenizer(reply_txtfiles, "tokenizer.json")
         self.tokenizer = load_custom_tokenizer("tokenizer.json")
-        self.dialog = self._sep_req_res(reply_txtfiles)
         self.do_preprocess = do_preprocess
+        self.dialog = self._sep_req_res(reply_txtfiles)
 
-    @classmethod
     def _sep_req_res(self, reply_txtfiles: list) -> dict:
         dialog_dict = {'REQ': [], 'RES': []}
         for txt_file in reply_txtfiles:
@@ -115,6 +114,10 @@ class TweetReplyDataSet(torch.utils.data.Dataset):
                 l = f.readlines()
                 for line in l:
                     speaker, speak = line.split(":", 1)
+                    if self.do_preprocess:
+                        speak = self._preprocess(speak)
+                    speak = self.tokenizer.encode(speak).ids
+                    speak = speak + [0 for _ in range(200-len(speak))]
                     dialog_dict[speaker].append(speak)
         assert len(dialog_dict['REQ']) == len(dialog_dict['RES']), print(
             "something wrong with dialogue dataset")
@@ -129,17 +132,8 @@ class TweetReplyDataSet(torch.utils.data.Dataset):
 
     def __getitem__(self, idx):
         speak, responce = self.dialog['REQ'][idx], self.dialog['RES'][idx]
-        if self.do_preprocess:
-            speak, responce = self._preprocess(
-                speak), self._preprocess(responce)
-        import pdb
-        speak, responce = self.tokenizer.encode(
-            speak).ids, self.tokenizer.encode(responce).ids
-        speak, responce = speak + \
-            [0 for _ in range(200-len(speak))], responce + \
-            [0 for _ in range(200 - len(responce))]
         # one-hot torch.nn.functional.one_hot(torch.LongTensor(responce), num_classes=50000)
-        return torch.LongTensor(speak), torch.LongTensor(responce)
+        return np.array(speak), np.array(responce)
 
 
 def get_dataloader(loader_category: str, batch_size: int, do_preprocess: bool = True) -> torch.utils.data.DataLoader:

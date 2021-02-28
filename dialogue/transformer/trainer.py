@@ -21,7 +21,7 @@ class Trainer:
         cmd_args.deepspeed_config = '../../../deepspeed_config.json'
         self.model_engine, self.optimizer, _, _ = deepspeed.initialize(
             args=cmd_args, model=model, model_parameters=model.parameters())
-        deepspeed.init_distributed()
+        # deepspeed.init_distributed()
 
     def train(self, epoch: int) -> None:
         for epoch_num in range(epoch):
@@ -34,6 +34,7 @@ class Trainer:
                 for i in range(responce.shape[1]):
                     loss_output += self.loss(output[:, i, :], responce[:, i])
                 loss_output /= responce.shape[1]
+                print(f"batch loss : {loss_output}")
                 # pdb.set_trace()
                 self.model_engine.backward(loss_output)
                 self.model_engine.step()

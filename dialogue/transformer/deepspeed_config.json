@@ -1,6 +1,6 @@
 {
-    "train_batch_size": 128,
-    "gradient_accumulation_steps": 2,
+    "train_batch_size": 16,
+    "gradient_accumulation_steps": 8,
     "zero_allow_untested_optimizer": true,
     "optimizer": {
         "type": "AdamW",
