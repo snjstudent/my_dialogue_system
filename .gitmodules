@@ -1,3 +1,6 @@
 [submodule "tts/mellotron"]
 	path = tts/mellotron
 	url = https://github.com/snjstudent/mellotron
+[submodule "gesture_face/MakeItTalk"]
+	path = gesture_face/MakeItTalk
+	url = https://github.com/snjstudent/MakeItTalk
