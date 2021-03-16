@@ -1,3 +1,5 @@
 outputs
 __pycache__
 .DS_Store
+tweet
+checkpoint

@@ -38,5 +38,6 @@ class Trainer:
                 # pdb.set_trace()
                 self.model_engine.backward(loss_output)
                 self.model_engine.step()
+            deepspeed.DeepSpeedEngine.save_checkpoint(self, "./checkpoint")
 
         print("epoch{}：終了\n".format(epoch_num+1))
