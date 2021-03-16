@@ -1,0 +1,3 @@
+[submodule "tts/mellotron"]
+	path = tts/mellotron
+	url = https://github.com/snjstudent/mellotron
