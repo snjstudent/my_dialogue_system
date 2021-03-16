@@ -4,3 +4,6 @@
 [submodule "gesture_face/MakeItTalk"]
 	path = gesture_face/MakeItTalk
 	url = https://github.com/snjstudent/MakeItTalk
+[submodule "gesture_image/BiGraphGAN"]
+	path = gesture_image/BiGraphGAN
+	url = https://github.com/snjstudent/BiGraphGAN
