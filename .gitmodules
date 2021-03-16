@@ -7,3 +7,6 @@
 [submodule "gesture_image/BiGraphGAN"]
 	path = gesture_image/BiGraphGAN
 	url = https://github.com/snjstudent/BiGraphGAN
+[submodule "gesture_location/Speech_driven_gesture_generation_with_autoencoder"]
+	path = gesture_location/Speech_driven_gesture_generation_with_autoencoder
+	url = https://github.com/snjstudent/Speech_driven_gesture_generation_with_autoencoder
