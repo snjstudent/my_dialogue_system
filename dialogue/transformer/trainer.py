@@ -32,7 +32,6 @@ class Trainer:
                     self.device), responce.to(self.device)
                 # self.optimizer.zero_grad()
                 output = self.model_engine(speak)
-                print(speak[:, 0].detach().cpu().numpy())
                 speak_decode = self.tokenizer.decode(
                     speak[0, :].detach().cpu().numpy())
                 responce_decode_model = self.tokenizer.decode(
