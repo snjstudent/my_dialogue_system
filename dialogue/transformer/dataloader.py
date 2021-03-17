@@ -116,9 +116,10 @@ class TweetReplyDataSet(torch.utils.data.Dataset):
                     speaker, speak = line.split(":", 1)
                     if self.do_preprocess:
                         speak = self._preprocess(speak)
+                    speak = "[CLS]"+speak+"[EOS]"
                     speak = self.tokenizer.encode(
-                        ["[CLS]"]+speak+["[SEP]"]).ids
-                    speak = speak + [0 for _ in range(200-len(speak))]
+                        speak).ids
+                    speak = speak + [0 for _ in range(200 - len(speak))]
                     dialog_dict[speaker].append(speak)
         assert len(dialog_dict['REQ']) == len(dialog_dict['RES']), print(
             "something wrong with dialogue dataset")
