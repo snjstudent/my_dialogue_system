@@ -113,14 +113,20 @@ class TweetReplyDataSet(torch.utils.data.Dataset):
             with open(txt_file, "r", errors='ignore') as f:
                 l = f.readlines()
                 for line in l:
-                    speaker, speak = line.split(":", 1)
-                    if self.do_preprocess:
-                        speak = self._preprocess(speak)
-                    speak = "[CLS]"+speak+"[EOS]"
-                    speak = self.tokenizer.encode(
-                        speak).ids
-                    speak = speak + [0 for _ in range(200 - len(speak))]
-                    dialog_dict[speaker].append(speak)
+                    try:
+                        speaker, speak = line.split(":", 1)
+                        if self.do_preprocess:
+                            speak = self._preprocess(speak)
+                        speak = "[CLS]"+speak+"[SEP]"
+                        speak = self.tokenizer.encode(
+                            speak).ids
+                        speak = speak + [0 for _ in range(200 - len(speak))]
+                        dialog_dict[speaker].append(speak)
+                    except:
+                        print("Error : ", line)
+                        del dialog_dict['REQ' if len(dialog_dict['REQ']) > len(
+                            dialog_dict['RES']) else 'RES'][-1]
+
         assert len(dialog_dict['REQ']) == len(dialog_dict['RES']), print(
             "something wrong with dialogue dataset")
         return dialog_dict
