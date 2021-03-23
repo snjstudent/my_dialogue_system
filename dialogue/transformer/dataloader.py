@@ -90,7 +90,7 @@ def load_custom_tokenizer(tokenizer_file: str) -> Tokenizer:
 
 
 settings = dict(
-    vocab_size=50000,
+    vocab_size=30000,
     min_frequency=1,
     limit_alphabet=1000,
 )
