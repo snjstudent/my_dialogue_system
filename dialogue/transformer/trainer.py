@@ -54,7 +54,7 @@ class Trainer:
                 loss_output = 0
                 # for i in range(responce.shape[0]):
                 #     loss_output += self.loss(output[i, :, :], responce[i, :])
-                loss_output = self.loss(output[0, :, :], responce[0, :])
+                loss_output = self.loss(output[0, :, :], responce[0, :])/128
                 #loss_output /= responce.shape[0]
                 print(f"batch loss : {loss_output}")
                 loss_output.backward()

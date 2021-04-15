@@ -115,12 +115,6 @@ class TweetReplyDataSet(torch.utils.data.Dataset):
                 for line in l:
                     try:
                         speaker, speak = line.split(":", 1)
-                        if self.do_preprocess:
-                            speak = self._preprocess(speak)
-                        speak = "[CLS]"+speak+"[SEP]"
-                        speak = self.tokenizer.encode(
-                            speak).ids
-                        speak = speak + [0 for _ in range(200 - len(speak))]
                         dialog_dict[speaker].append(speak)
                     except:
                         print("Error : ", line)
@@ -138,8 +132,17 @@ class TweetReplyDataSet(torch.utils.data.Dataset):
     def __len__(self):
         return len(self.dialog['REQ'])
 
+    def tokenize(self, speak):
+        speak = self._preprocess(speak)
+        speak = "[CLS]"+speak+"[SEP]"
+        speak = self.tokenizer.encode(
+            speak).ids
+        speak = speak + [0 for _ in range(200 - len(speak))]
+        return speak
+
     def __getitem__(self, idx):
         speak, responce = self.dialog['REQ'][idx], self.dialog['RES'][idx]
+        speak, responce = self.tokenize(speak), self.tokenize(responce)
         # one-hot torch.nn.functional.one_hot(torch.LongTensor(responce), num_classes=50000)
         return np.array(speak), np.array(responce)
 
