@@ -16,9 +16,9 @@ import numpy as np
 
 # データセットの定義
 class TweetReplyDataSet(torch.utils.data.Dataset):
-    def __init__(self, do_preprocess: bool = True) -> None:
+    def __init__(self, mode, do_preprocess: bool = True) -> None:
         super().__init__()
-        reply_txtfiles = glob.glob('./tweet/*')
+        reply_txtfiles = glob.glob(f'./tweet/{mode}/*')
         reply_txtfiles = sorted(reply_txtfiles)
         self.tokenizer = T5Tokenizer.from_pretrained(
             "sonoisa/t5-base-japanese")
@@ -66,9 +66,9 @@ class TweetReplyDataSet(torch.utils.data.Dataset):
         return np.array(speak), np.array(responce)
 
 
-def get_dataloader(loader_category: str, batch_size: int, do_preprocess: bool = True) -> torch.utils.data.DataLoader:
+def get_dataloader(loader_category: str, mode: str, batch_size: int, do_preprocess: bool = True) -> torch.utils.data.DataLoader:
     if loader_category == "tweet_reply":
-        tweetreply_dataset = TweetReplyDataSet(do_preprocess=do_preprocess)
+        tweetreply_dataset = TweetReplyDataSet(mode, do_preprocess)
         TweetReplyDataLoader = torch.utils.data.DataLoader(
             tweetreply_dataset, batch_size=batch_size, shuffle=True)
         return TweetReplyDataLoader

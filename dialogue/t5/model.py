@@ -53,7 +53,7 @@ class T5DialoguePlModel(pl.LightningModule):
         return optim.__dict__[self.cfg.optimizer.algorizum](self.model.parameters(), lr=self.cfg.lr)
 
     def train_dataloader(self):
-        return dataloader.get_dataloader(loader_category="tweet_reply", batch_size=self.cfg.batch_size)
+        return dataloader.get_dataloader(loader_category="tweet_reply", model="train", batch_size=self.cfg.batch_size)
 
     def val_dataloader(self):
-        return super().val_dataloader()
+        return dataloader.get_dataloader(loader_category="tweet_reply", model="val", batch_size=self.cfg.batch_size)
