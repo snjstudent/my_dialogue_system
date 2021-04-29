@@ -110,7 +110,7 @@ class TweetReplyDataSet(torch.utils.data.Dataset):
     def _sep_req_res(self, reply_txtfiles: list) -> dict:
         dialog_dict = {'REQ': [], 'RES': []}
         for txt_file in reply_txtfiles:
-            with open(txt_file, "r", errors='ignore') as f:
+            with open(txt_file, "r") as f:
                 l = f.readlines()
                 for line in l:
                     try:

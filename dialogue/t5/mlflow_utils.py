@@ -1,6 +1,7 @@
 import mlflow
-import mlflow.tracking.MlflowClient as MlflowClient
+from mlflow.tracking import MlflowClient
 import torch
+from omegaconf import DictConfig, ListConfig
 
 
 class MlflowWriter():

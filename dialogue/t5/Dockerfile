@@ -14,6 +14,6 @@ ENV TZ=Asia/Tokyo
 RUN apt-get install -y mpich git cron curl make
 
 #install python packages
-RUN pip3 install install --pre torch torchvision -f https://download.pytorch.org/whl/nightly/cu110/torch_nightly.html\
-    && pip3 install transformers neologdn fugashi ipadic mpi4py pytextspan cupy-cuda111 mlflow pytorch-lighting\
+RUN pip3 torch==1.8.1 -f https://download.pytorch.org/whl/torch_stable.html\
+    && pip3 install sentencepiece transformers omegaconf neologdn fugashi ipadic mpi4py pytextspan cupy-cuda111 mlflow git+https://github.com/williamFalcon/pytorch-lightning\
     && pip3 install hydra-core --upgrade

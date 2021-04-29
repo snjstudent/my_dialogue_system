@@ -14,8 +14,13 @@ class T5DialogModel(nn.Module):
         self.t5_model = T5ForConditionalGeneration.from_pretrained(
             "sonoisa/t5-base-japanese")
 
-    def forward(self, x):
-        return self.t5_model(x)
+    def forward(self, speak, responce):
+        labels = responce["input_ids"]
+        labels[labels[:, :] == 0] = -100
+        return self.t5_model(input_ids=speak["input_ids"],
+                             attention_mask=speak["attention_mask"],
+                             decoder_attention_mask=responce['attention_mask'],
+                             labels=labels)
 
     def cal_loss(self, pred, gt):
         loss = nn.CrossEntropyLoss(pred, gt)
@@ -32,28 +37,28 @@ class T5DialoguePlModel(pl.LightningModule):
             "sonoisa/t5-base-japanese")
         self.writer.log_params_from_omegaconf_dict(cfg)
 
-    def forward(self, x):
-        return self.model(x)
+    def forward(self, target, responce):
+        return self.model(target, responce)
 
     def training_step(self, batch, batch_idx):
         target, responce = batch
-        outputs = self.model(batch)
-        loss_output = self.model.cal_loss(outputs[0, :, :], responce[0, :])
+        outputs = self.model(target, responce)
+        loss_output = outputs[0]
         self.log("training_loss", loss_output)
         return {"loss": loss_output}
 
     def validation_step(self, batch, batch_idx):
         target, responce = batch
-        outputs = self.model(batch)
-        loss_output = self.model.cal_loss(outputs[0, :, :], responce[0, :])
+        outputs = self.model(target, responce)
+        loss_output = outputs[0]
         self.log("validation_loss", loss_output)
         return {"loss": loss_output}
 
     def configure_optimizers(self):
-        return optim.__dict__[self.cfg.optimizer.algorizum](self.model.parameters(), lr=self.cfg.lr)
+        return optim.__dict__[self.cfg.train.optimizer.algorithm](self.model.parameters(), lr=self.cfg.train.optimizer.lr)
 
     def train_dataloader(self):
-        return dataloader.get_dataloader(loader_category="tweet_reply", model="train", batch_size=self.cfg.batch_size)
+        return dataloader.get_dataloader(loader_category=self.cfg.train.data_category, mode="train", batch_size=self.cfg.train.batch_size)
 
     def val_dataloader(self):
-        return dataloader.get_dataloader(loader_category="tweet_reply", model="val", batch_size=self.cfg.batch_size)
+        return dataloader.get_dataloader(loader_category=self.cfg.train.data_category, mode="val", batch_size=self.cfg.train.batch_size)
