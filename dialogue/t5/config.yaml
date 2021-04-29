@@ -1,0 +1,5 @@
+mode: train
+  optimizer: 
+    algorithm: Adam
+    lr: 0.01
+  

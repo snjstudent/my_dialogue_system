@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 import torch.optim
-import deepspeed
 import argparse
 import dataloader as dl
 import pdb
