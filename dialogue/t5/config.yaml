@@ -1,7 +1,7 @@
 train:
   optimizer: 
-    algorithm: Adam
-    lr: 0.01
+    algorithm: AdamW
+    lr: 3.0e-4
   batch_size: 16
   data_category : tweet_reply
   
