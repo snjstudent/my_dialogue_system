@@ -61,6 +61,7 @@ class TweetReplyDataSet(torch.utils.data.Dataset):
         return intput_token
 
     def __getitem__(self, idx):
+        
         speak, responce = self.dialog['REQ'][idx], self.dialog['RES'][idx]
         speak, responce = self.tokenize(speak), self.tokenize(responce)
         speak, responce = self._reshape_tokens(

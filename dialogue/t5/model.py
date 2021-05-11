@@ -18,6 +18,7 @@ class T5DialogModel(nn.Module):
         labels = responce["input_ids"]
         labels[labels[:, :] == 0] = -100
         return self.t5_model(input_ids=speak["input_ids"],
+                             decoder_input_ids=None,
                              attention_mask=speak["attention_mask"],
                              decoder_attention_mask=responce['attention_mask'],
                              labels=labels)
