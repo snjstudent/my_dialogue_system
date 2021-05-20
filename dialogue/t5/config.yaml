@@ -2,6 +2,11 @@ train:
   optimizer: 
     algorithm: AdamW
     lr: 3.0e-4
+  early_stop:
+    loss: 'training_loss'
+    mode: 'min'
+    patience: 50
+
   batch_size: 16
-  data_category : tweet_reply
+  data_category : j-tocc
   

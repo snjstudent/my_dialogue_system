@@ -1,4 +1,3 @@
-from typing_extensions import ParamSpec
 import torch
 import glob
 import pdb
@@ -83,12 +82,14 @@ class MeidaiReplyDataSet(torch.utils.data.Dataset):
 
     def _sep_req_res(self, reply_txtfiles: list) -> dict:
         dialog_dict = {'REQ': [], 'RES': []}
+        convert_speaker_dict = {'input': 'REQ', 'output': 'RES'}
         for txt_file in reply_txtfiles:
             with open(txt_file, "r", errors='ignore') as f:
                 l = f.readlines()
                 for line in l:
                     try:
                         speaker, speak = line.split(":", 1)
+                        speaker, speak = convert_speaker_dict[speaker], speak[1:]
                         if self.do_preprocess:
                             speak = self._preprocess(speak)
                         dialog_dict[speaker].append(speak)
@@ -184,12 +185,19 @@ class J_ToccDataSet(torch.utils.data.Dataset):
                 l = f.readlines()
                 for line in l:
                     try:
-                        speaker, speak = line.split(":", 1)
+                        speaker, speak = line.split("：", 1)
+                        if speaker[-2] == '1':
+                            speaker = 'REQ'
+                        elif speaker[-2] == '2':
+                            speaker = 'RES'
                         if self.do_preprocess:
                             speak = self._preprocess(speak)
                         dialog_dict[speaker].append(speak)
                     except:
                         print("Error : ", line)
+            if not len(dialog_dict['REQ']) == len(dialog_dict['RES']):
+                del dialog_dict['REQ' if len(
+                    dialog_dict['REQ']) > len(dialog_dict['RES']) else 'RES'][-1]
         assert len(dialog_dict['REQ']) == len(dialog_dict['RES']), print(
             "something wrong with dialogue dataset")
         return dialog_dict
