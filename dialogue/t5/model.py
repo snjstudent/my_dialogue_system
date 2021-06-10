@@ -33,7 +33,7 @@ class T5DialogModel(nn.Module):
 
 
 class T5DialoguePlModel(pl.LightningModule):
-    def __init__(self, cfg, writer, pretrained_path=None):
+    def __init__(self, cfg, writer, pretrained_path=None,do_train=True):
         super().__init__()
         self.cfg = cfg
         self.writer = writer
@@ -41,7 +41,8 @@ class T5DialoguePlModel(pl.LightningModule):
 
         self.tokenizer = T5Tokenizer.from_pretrained(
             "sonoisa/t5-base-japanese")
-        self.writer.log_params_from_omegaconf_dict(cfg)
+        if do_train:
+            self.writer.log_params_from_omegaconf_dict(cfg)
 
     def forward(self, target, responce):
         return self.model(target, responce)

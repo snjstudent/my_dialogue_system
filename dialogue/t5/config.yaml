@@ -6,7 +6,6 @@ train:
     loss: 'training_loss'
     mode: 'min'
     patience: 50
-
   batch_size: 16
   data_category : j-tocc
-  
+
