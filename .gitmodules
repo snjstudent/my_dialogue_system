@@ -10,3 +10,9 @@
 [submodule "gesture_location/Speech_driven_gesture_generation_with_autoencoder"]
 	path = gesture_location/Speech_driven_gesture_generation_with_autoencoder
 	url = https://github.com/snjstudent/Speech_driven_gesture_generation_with_autoencoder
+[submodule "gesture_image/articulated-animation"]
+	path = gesture_image/articulated-animation
+	url = https://github.com/snjstudent/articulated-animation
+[submodule "gesture_image/ADGAN"]
+	path = gesture_image/ADGAN
+	url = https://github.com/snjstudent/ADGAN

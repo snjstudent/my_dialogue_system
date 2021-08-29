@@ -1,0 +1,8 @@
+*.mp4
+*.bmp
+*.png
+util/*.pth*
+util/*.npy
+util/*xml
+*__pycache__
+intermediate/*
