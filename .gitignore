@@ -6,3 +6,4 @@ util/*.npy
 util/*xml
 *__pycache__
 intermediate/*
+gui/*.mp4

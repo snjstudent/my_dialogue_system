@@ -6,16 +6,19 @@ gesture_fashion_ver='adgan'
 gesture_img2img_ver='articulated_animation'
 
 set -e
-read input_question
+# read input_question
 
 #nlp dialog
-python3 dialog.py dialog_nlp -i $input_question $dialogue_ver
+python3 dialog.py dialog_nlp -i $1 $dialogue_ver
 
 #text-to-speech
 python3 dialog.py dialog_tts -i $tts_ver
 
 #generate talkinghead
 python3 dialog.py dialog_talkinghead -i $talking_head_ver
+
+if $2='face';then
+    exit
 
 #gesture location
 python3 dialog.py gesture_fromspeech -i $gesture_location_ver
