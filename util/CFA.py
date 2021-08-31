@@ -1,3 +1,4 @@
+# this script is cited from https://github.com/kanosawa/anime_face_landmark_detection/blob/master/CFA.py
 import torch
 import torch.nn as nn
 import torch.utils.model_zoo as model_zoo
