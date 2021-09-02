@@ -70,6 +70,8 @@ def dialog_talkinghead(version):
             f"docker cp {DIALOG_TALKINGHEAD_CONTAINER_NAME}:/makeittalk/out.mp4 intermediate/face.mp4", shell=True)
         proc_3 = subprocess.run(
             f"python3 util/face.py crop_from_movie -i intermediate/face.mp4", shell=True)
+        proc_4 = subprocess.run(
+            f'ffmpeg -i intermediate/face.mp4 -i intermediate/test.wav -c:v copy -shortest -map 0:v:0 -map 1:a:0 "face.mp4"', shell=True)
 
 
 def gesture_fromspeech(version):
@@ -134,8 +136,8 @@ def gesture_img_to_img(version):
 
 
 def align_face_body():
-    subprocess.run(f'rm out.mp4', shell=True)
-    subprocess.run(f'rm aligned.mp4')
+    subprocess.run(f'rm -rf out.mp4', shell=True)
+    subprocess.run(f'rm -rf aligned.mp4', shell=True)
     proc = subprocess.run(f'docker start face_util', shell=True)
     proc_1 = subprocess.run(
         f'docker exec -w /mounted face_util python3 util/face.py convert_from_movie -i intermediate/body.mp4 intermediate/face.mp4', shell=True)

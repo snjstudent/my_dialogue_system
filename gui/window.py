@@ -50,7 +50,7 @@ def dialog_window(mode):
             os.system(f'sh pipeline_all.sh {input_text} {mode}')
             reply = read_reply_fromfile('intermediate/nlp_out.txt')
             window['-reply-'].update(reply)
-            cap = cv2.VideoCapture(f'aligned.mp4') if mode == 'body' else cv2.VideoCapture(
+            cap = cv2.VideoCapture(f'out.mp4') if mode == 'body' else cv2.VideoCapture(
                 f'intermediate/face.mp4')
             fps = cap.get(cv2.CAP_PROP_FPS)
             continue

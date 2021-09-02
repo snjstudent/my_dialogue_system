@@ -17,8 +17,9 @@ python3 dialog.py dialog_tts -i $tts_ver
 #generate talkinghead
 python3 dialog.py dialog_talkinghead -i $talking_head_ver
 
-if $2='face';then
+if $2='face'; then
     exit
+fi
 
 #gesture location
 python3 dialog.py gesture_fromspeech -i $gesture_location_ver
