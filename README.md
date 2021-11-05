@@ -10,8 +10,8 @@ Takes text as input and returns the corresponding response, audio or video.
 
 # DEMO
 The images in these links were used for generation. <br />
-face・gesture ： https://wataokiba.net/2018/02/17/7148522/ <br />
-gesture and face : https://matsuillust.com/blog-fb018e/
+https://wataokiba.net/2018/02/17/7148522/ <br />
+https://matsuillust.com/blog-fb018e/
 
 
 ![face](https://user-images.githubusercontent.com/51740136/140266271-4fe270b0-1f9b-4dae-8348-2704d2dd760b.gif)
