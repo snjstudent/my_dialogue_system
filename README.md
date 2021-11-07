@@ -29,4 +29,4 @@ We'll make it available as soon as possible.
 
 # Note
 
-Copyrights of the images and codes are belong to their respective owners.
+
